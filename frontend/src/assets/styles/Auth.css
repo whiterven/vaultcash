@@ -1,0 +1,143 @@
+/* src/assets/styles/Auth.css */
+
+:root {
+  --border-radius: 8px;
+  --spacing-unit: 8px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--color-secondary);
+  padding: calc(var(--spacing-unit) * 2);
+}
+
+.auth-card {
+  background-color: var(--color-secondary);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: calc(var(--spacing-unit) * 4);
+  width: 100%;
+  max-width: 400px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: calc(var(--spacing-unit) * 3);
+}
+
+.auth-header h2 {
+  color: var(--color-primary);
+  font-size: 2rem;
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
+}
+
+.auth-header p {
+  color: var(--color-accent);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-unit) * 2);
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.input-label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+.input-field {
+  padding: 0.5rem;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.5rem;
+  transform: translateY(-50%);
+  color: var(--color-accent);
+}
+
+.input-group .input-field {
+  padding-left: 2rem;
+}
+
+.submit-btn {
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  border: none;
+  padding: calc(var(--spacing-unit) * 1.5);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.submit-btn:hover {
+  background-color: var(--color-accent);
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.error-message {
+  background-color: var(--color-danger);
+  color: var(--color-secondary);
+  padding: calc(var(--spacing-unit) * 1.5);
+  border-radius: var(--border-radius);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  text-align: center;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: calc(var(--spacing-unit) * 3);
+}
+
+.auth-link, .signup-link, .login-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.auth-link:hover, .signup-link:hover, .login-link:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: calc(var(--spacing-unit) * 3);
+  }
+
+  .auth-header h2 {
+    font-size: 1.75rem;
+  }
+}

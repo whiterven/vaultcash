@@ -1,8 +1,10 @@
-from flask_jwt_extended import create_access_token, create_refresh_token
+#auth_service.py
+
 from ..models import User
 from ..extensions import db
 from werkzeug.exceptions import BadRequest, Unauthorized
-from ..utils.email_utils import send_password_reset_email
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token, create_refresh_token
 import secrets
 import datetime
 
@@ -66,7 +68,7 @@ class AuthService:
             user.reset_token = reset_token
             user.reset_token_expiration = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
             db.session.commit()
-            send_password_reset_email(user.email, reset_token)
+            # Here you would typically send an email with the reset token
         return True  # Always return True to prevent email enumeration
 
     @staticmethod

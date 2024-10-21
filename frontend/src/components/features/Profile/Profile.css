@@ -1,0 +1,22 @@
+/* src/components/features/Profile/Profile.css */
+.profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: calc(var(--spacing-unit) * 2);
+  }
+  
+  .profile-container h1 {
+    margin-bottom: calc(var(--spacing-unit) * 2);
+  }
+  
+  .profile-form {
+    background-color: var(--color-secondary);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--border-radius);
+    padding: calc(var(--spacing-unit) * 2);
+  }
+  
+  .profile-form button {
+    width: 100%;
+    margin-top: var(--spacing-unit);
+  }

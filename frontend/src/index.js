@@ -1,24 +1,24 @@
+// src/index.js
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from './store';
-import { AuthProvider } from './context/AuthContext';
 import { WalletProvider } from './context/WalletContext';
+import { AuthProvider } from './context/AuthContext';
 import App from './App';
-import './assets/styles/index.css';
+import './index.css'
+import './assets/styles/Home.css'
+import './assets/styles/App.css'
+import './assets/styles/Auth.css'
+import './assets/styles/designSystem.css'
+import './assets/styles/Transactions.css'
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <AuthProvider>
-        <WalletProvider>
-          <Router>
-            <App />
-          </Router>
-        </WalletProvider>
-      </AuthProvider>
-    </Provider>
+    <AuthProvider>
+      <WalletProvider>
+        <App />
+      </WalletProvider>
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

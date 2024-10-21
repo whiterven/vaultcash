@@ -1,0 +1,61 @@
+/* src/components/features/Dashboard/Dashboard.css */
+.dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: calc(var(--spacing-unit) * 2);
+  }
+  
+  .dashboard h1 {
+    margin-bottom: calc(var(--spacing-unit) * 2);
+  }
+  
+  .dashboard-summary {
+    display: flex;
+    gap: calc(var(--spacing-unit) * 2);
+    margin-bottom: calc(var(--spacing-unit) * 4);
+  }
+  
+  .balance-card, .quick-actions {
+    flex: 1;
+    background-color: var(--color-secondary);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--border-radius);
+    padding: calc(var(--spacing-unit) * 2);
+  }
+  
+  .balance {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: calc(var(--spacing-unit) * 2) 0;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: var(--spacing-unit);
+  }
+  
+  .quick-actions button {
+    display: block;
+    width: 100%;
+    margin-bottom: var(--spacing-unit);
+  }
+  
+  .recent-transactions ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .transaction-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-unit);
+    border-bottom: 1px solid var(--color-accent);
+  }
+  
+  .amount.credit {
+    color: green;
+  }
+  
+  .amount.debit {
+    color: red;
+  }

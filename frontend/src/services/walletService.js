@@ -1,25 +1,26 @@
+// src/services/walletService.js
 import api from './api';
 
-const walletService = {
-  getBalance: async () => {
-    const response = await api.get('/wallet/balance');
-    return response.data;
-  },
-
-  addFunds: async (amount, source) => {
-    const response = await api.post('/wallet/add-funds', { amount, source });
-    return response.data;
-  },
-
-  withdrawFunds: async (amount, destination) => {
-    const response = await api.post('/wallet/withdraw', { amount, destination });
-    return response.data;
-  },
-
-  getTransactions: async (page = 1, limit = 10) => {
-    const response = await api.get(`/wallet/transactions?page=${page}&limit=${limit}`);
-    return response.data;
-  },
+export const getBalance = async () => {
+  const response = await api.get('/wallet/balance');
+  return response.data.balance;
 };
 
-export default walletService;
+export const deposit = async (amount) => {
+  const response = await api.post('/wallet/deposit', { amount });
+  return response.data;
+};
+
+export const withdraw = async (amount) => {
+  const response = await api.post('/wallet/withdraw', { amount });
+  return response.data;
+};
+
+export const getTransactions = async (page = 1, limit = 10) => {
+  const response = await api.get(`/wallet/transactions?page=${page}&limit=${limit}`);
+  return response.data;
+};
+
+// Add aliases for existing code compatibility
+export const addFunds = deposit;
+export const withdrawFunds = withdraw;

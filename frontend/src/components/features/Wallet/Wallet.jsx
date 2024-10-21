@@ -1,73 +1,64 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchWalletBalance, addFunds, withdrawFunds } from '../../../features/wallet/walletSlice';
-import WalletSummary from './WalletSummary';
+// src/components/features/Wallet/Wallet.jsx
+import React, { useContext, useState } from 'react';
+import { WalletContext } from '../../../context/WalletContext';
+import { addFunds, withdrawFunds } from '../../../services/walletService';
 import Button from '../../common/Button';
-import Modal from '../../common/Modal';
+import Input from '../../common/Input';
+import './Wallet.css';
 
 const Wallet = () => {
-  const dispatch = useDispatch();
-  const { balance, loading, error } = useSelector((state) => state.wallet);
-  const [isAddFundsModalOpen, setIsAddFundsModalOpen] = useState(false);
-  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const { balance, updateBalance } = useContext(WalletContext);
   const [amount, setAmount] = useState('');
+  const [action, setAction] = useState(null);
 
-  useEffect(() => {
-    dispatch(fetchWalletBalance());
-  }, [dispatch]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!amount || isNaN(amount)) return;
 
-  const handleAddFunds = () => {
-    dispatch(addFunds(parseFloat(amount)));
-    setIsAddFundsModalOpen(false);
-    setAmount('');
+    try {
+      if (action === 'add') {
+        await addFunds(parseFloat(amount));
+        updateBalance(balance + parseFloat(amount));
+      } else if (action === 'withdraw') {
+        if (parseFloat(amount) > balance) {
+          alert('Insufficient funds');
+          return;
+        }
+        await withdrawFunds(parseFloat(amount));
+        updateBalance(balance - parseFloat(amount));
+      }
+      setAmount('');
+      setAction(null);
+    } catch (error) {
+      console.error('Transaction failed:', error);
+      alert('Transaction failed. Please try again.');
+    }
   };
-
-  const handleWithdraw = () => {
-    dispatch(withdrawFunds(parseFloat(amount)));
-    setIsWithdrawModalOpen(false);
-    setAmount('');
-  };
-
-  if (loading) {
-    return <div>Loading wallet information...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Your Wallet</h1>
-      <WalletSummary balance={balance} />
-      <div className="mt-8 flex space-x-4">
-        <Button onClick={() => setIsAddFundsModalOpen(true)}>Add Funds</Button>
-        <Button onClick={() => setIsWithdrawModalOpen(true)} variant="secondary">Withdraw</Button>
+    <div className="wallet">
+      <h1>My Wallet</h1>
+      <div className="wallet-balance">
+        <h2>Current Balance</h2>
+        <p className="balance">${balance.toFixed(2)}</p>
       </div>
-
-      <Modal isOpen={isAddFundsModalOpen} onClose={() => setIsAddFundsModalOpen(false)}>
-        <h2 className="text-2xl font-bold mb-4">Add Funds</h2>
-        <input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="input mb-4"
-          placeholder="Enter amount"
-        />
-        <Button onClick={handleAddFunds}>Confirm</Button>
-      </Modal>
-
-      <Modal isOpen={isWithdrawModalOpen} onClose={() => setIsWithdrawModalOpen(false)}>
-        <h2 className="text-2xl font-bold mb-4">Withdraw Funds</h2>
-        <input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="input mb-4"
-          placeholder="Enter amount"
-        />
-        <Button onClick={handleWithdraw}>Confirm</Button>
-      </Modal>
+      <div className="wallet-actions">
+        <Button onClick={() => setAction('add')}>Add Funds</Button>
+        <Button onClick={() => setAction('withdraw')}>Withdraw Funds</Button>
+      </div>
+      {action && (
+        <form onSubmit={handleSubmit} className="transaction-form">
+          <h3>{action === 'add' ? 'Add Funds' : 'Withdraw Funds'}</h3>
+          <Input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Enter amount"
+            label="Amount"
+          />
+          <Button type="submit">Confirm</Button>
+        </form>
+      )}
     </div>
   );
 };

@@ -1,28 +1,58 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchAllTransactions } from '../features/transactions/transactionSlice';
-import TransactionList from '../components/features/Transactions/TransactionList';
+// src/pages/Transactions.jsx
+import React, { useState, useEffect, useCallback } from 'react';
+import { getTransactions } from '../services/walletService';
+import Button from '../components/common/Button';
+import '../assets/styles/Transactions.css';
 
 const Transactions = () => {
-  const dispatch = useDispatch();
-  const { transactions, loading, error } = useSelector((state) => state.transactions);
+  const [transactions, setTransactions] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchTransactions = useCallback(async () => {
+    try {
+      const response = await getTransactions(page);
+      if (response.transactions.length === 0) {
+        setHasMore(false);
+      } else {
+        setTransactions(prev => [...prev, ...response.transactions]);
+      }
+    } catch (error) {
+      console.error('Failed to fetch transactions:', error);
+    }
+  }, [page]);
 
   useEffect(() => {
-    dispatch(fetchAllTransactions());
-  }, [dispatch]);
+    fetchTransactions();
+  }, [fetchTransactions]);
 
-  if (loading) {
-    return <div className="container mx-auto px-4 py-8">Loading transactions...</div>;
-  }
-
-  if (error) {
-    return <div className="container mx-auto px-4 py-8">Error: {error}</div>;
-  }
+  const loadMore = () => {
+    setPage(prev => prev + 1);
+  };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Transaction History</h1>
-      <TransactionList transactions={transactions} />
+    <div className="transactions-container">
+      <h1>Transaction History</h1>
+      <div className="transactions-list">
+        {transactions.map(transaction => (
+          <div key={transaction.id} className="transaction-item">
+            <div className="transaction-info">
+              <span className="transaction-date">
+                {new Date(transaction.timestamp).toLocaleDateString()}
+              </span>
+              <span className="transaction-description">{transaction.description}</span>
+            </div>
+            <span className={`transaction-amount ${transaction.type}`}>
+              {transaction.type === 'credit' ? '+' : '-'}${transaction.amount.toFixed(2)}
+            </span>
+          </div>
+        ))}
+      </div>
+      {hasMore && (
+        <div className="load-more">
+          <Button onClick={loadMore}>Load More</Button>
+        </div>
+      )}
     </div>
   );
 };

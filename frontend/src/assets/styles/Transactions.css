@@ -1,0 +1,59 @@
+/* src/assets/styles/Transactions.css */
+.transactions-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: calc(var(--spacing-unit) * 2);
+  }
+  
+  .transactions-container h1 {
+    margin-bottom: calc(var(--spacing-unit) * 2);
+  }
+  
+  .transactions-list {
+    background-color: var(--color-secondary);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--border-radius);
+  }
+  
+  .transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-unit);
+    border-bottom: 1px solid var(--color-accent);
+  }
+  
+  .transaction-item:last-child {
+    border-bottom: none;
+  }
+  
+  .transaction-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .transaction-date {
+    font-size: 0.9rem;
+    color: var(--color-accent);
+  }
+  
+  .transaction-description {
+    font-weight: bold;
+  }
+  
+  .transaction-amount {
+    font-weight: bold;
+  }
+  
+  .transaction-amount.credit {
+    color: green;
+  }
+  
+  .transaction-amount.debit {
+    color: red;
+  }
+  
+  .load-more {
+    text-align: center;
+    margin-top: calc(var(--spacing-unit) * 2);
+  }

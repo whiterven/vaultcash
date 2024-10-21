@@ -1,25 +1,12 @@
+// src/services/paymentService.js
 import api from './api';
 
-const paymentService = {
-  sendMoney: async (recipientId, amount) => {
-    const response = await api.post('/payments/send', { recipientId, amount });
-    return response.data;
-  },
-
-  requestMoney: async (senderId, amount) => {
-    const response = await api.post('/payments/request', { senderId, amount });
-    return response.data;
-  },
-
-  payBill: async (billerId, amount, reference) => {
-    const response = await api.post('/payments/pay-bill', { billerId, amount, reference });
-    return response.data;
-  },
-
-  getPaymentHistory: async () => {
-    const response = await api.get('/payments/history');
-    return response.data;
-  },
+export const createPaymentIntent = async (amount) => {
+  const response = await api.post('/payment/create-payment-intent', { amount });
+  return response.data;
 };
 
-export default paymentService;
+export const confirmPayment = async (paymentIntentId) => {
+  const response = await api.post('/payment/confirm-payment', { paymentIntentId });
+  return response.data;
+};

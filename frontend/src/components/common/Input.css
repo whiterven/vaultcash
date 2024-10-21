@@ -1,0 +1,22 @@
+/* src/components/common/Input.css */
+.input-wrapper {
+    margin-bottom: var(--spacing-unit);
+  }
+  
+  .input-wrapper label {
+    display: block;
+    margin-bottom: calc(var(--spacing-unit) / 2);
+  }
+  
+  .input {
+    width: 100%;
+    padding: var(--spacing-unit);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }

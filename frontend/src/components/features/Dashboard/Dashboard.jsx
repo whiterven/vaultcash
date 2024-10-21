@@ -1,58 +1,58 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchWalletBalance } from '../../../features/wallet/walletSlice';
-import { fetchRecentTransactions } from '../../../features/transactions/transactionSlice';
-import WalletSummary from '../Wallet/WalletSummary';
-import TransactionList from '../Transactions/TransactionList';
+// src/components/features/Dashboard/Dashboard.jsx
+import React, { useContext, useEffect, useState } from 'react';
+import { WalletContext } from '../../../context/WalletContext';
+import { getTransactions } from '../../../services/walletService';
 import Button from '../../common/Button';
-import { Link } from 'react-router-dom';
+import './Dashboard.css';
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
-  const { balance, loading: walletLoading } = useSelector((state) => state.wallet);
-  const { transactions, loading: transactionsLoading } = useSelector((state) => state.transactions);
-  const { user } = useSelector((state) => state.auth);
+  const { balance } = useContext(WalletContext);
+  const [recentTransactions, setRecentTransactions] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchWalletBalance());
-    dispatch(fetchRecentTransactions());
-  }, [dispatch]);
+    const fetchRecentTransactions = async () => {
+      try {
+        const transactions = await getTransactions(1, 5); // Get first page, 5 items
+        setRecentTransactions(transactions);
+      } catch (error) {
+        console.error('Failed to fetch recent transactions:', error);
+      }
+    };
+
+    fetchRecentTransactions();
+  }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Welcome, {user.name}</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="card">
-          <h2 className="text-2xl font-semibold mb-4">Wallet Summary</h2>
-          {walletLoading ? (
-            <p>Loading wallet information...</p>
-          ) : (
-            <WalletSummary balance={balance} />
-          )}
-          <div className="mt-4">
-            <Link to="/wallet">
-              <Button variant="secondary">View Wallet Details</Button>
-            </Link>
+    <div className="dashboard">
+      <h1>Dashboard</h1>
+      <div className="dashboard-summary">
+        <div className="balance-card">
+          <h2>Current Balance</h2>
+          <p className="balance">${balance.toFixed(2)}</p>
+          <div className="action-buttons">
+            <Button>Add Funds</Button>
+            <Button>Withdraw</Button>
           </div>
         </div>
-        <div className="card">
-          <h2 className="text-2xl font-semibold mb-4">Recent Transactions</h2>
-          {transactionsLoading ? (
-            <p>Loading recent transactions...</p>
-          ) : (
-            <TransactionList transactions={transactions.slice(0, 5)} />
-          )}
-          <div className="mt-4">
-            <Link to="/transactions">
-              <Button variant="secondary">View All Transactions</Button>
-            </Link>
-          </div>
+        <div className="quick-actions">
+          <h2>Quick Actions</h2>
+          <Button>Send Money</Button>
+          <Button>Request Money</Button>
+          <Button>View Transactions</Button>
         </div>
       </div>
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Button as={Link} to="/send-money" variant="primary">Send Money</Button>
-        <Button as={Link} to="/request-money" variant="primary">Request Money</Button>
-        <Button as={Link} to="/pay-bills" variant="primary">Pay Bills</Button>
+      <div className="recent-transactions">
+        <h2>Recent Transactions</h2>
+        <ul>
+          {recentTransactions.map((transaction) => (
+            <li key={transaction.id} className="transaction-item">
+              <span>{transaction.description}</span>
+              <span className={`amount ${transaction.type}`}>
+                {transaction.type === 'credit' ? '+' : '-'}${transaction.amount.toFixed(2)}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

@@ -1,0 +1,15 @@
+/* src/components/common/Button.css */
+.button {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: var(--spacing-unit) calc(var(--spacing-unit) * 2);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: var(--color-accent);
+  }

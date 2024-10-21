@@ -1,8 +1,9 @@
+// src/context/WalletContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import walletService from '../services/walletService';
+import * as walletService from '../services/walletService';
 import { useAuth } from './AuthContext';
 
-const WalletContext = createContext();
+export const WalletContext = createContext();
 
 export const useWallet = () => useContext(WalletContext);
 
@@ -11,6 +12,10 @@ export const WalletProvider = ({ children }) => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+
+  const updateBalance = (newBalance) => {
+    setBalance(newBalance);
+  };
 
   useEffect(() => {
     if (user) {
@@ -21,8 +26,8 @@ export const WalletProvider = ({ children }) => {
 
   const fetchBalance = async () => {
     try {
-      const data = await walletService.getBalance();
-      setBalance(data.balance);
+      const balance = await walletService.getBalance();
+      setBalance(balance);
     } catch (error) {
       console.error('Failed to fetch balance:', error);
     }
@@ -39,34 +44,13 @@ export const WalletProvider = ({ children }) => {
     }
   };
 
-  const addFunds = async (amount, source) => {
-    try {
-      await walletService.addFunds(amount, source);
-      await fetchBalance();
-      await fetchTransactions();
-    } catch (error) {
-      console.error('Failed to add funds:', error);
-      throw error;
-    }
-  };
-
-  const withdrawFunds = async (amount, destination) => {
-    try {
-      await walletService.withdrawFunds(amount, destination);
-      await fetchBalance();
-      await fetchTransactions();
-    } catch (error) {
-      console.error('Failed to withdraw funds:', error);
-      throw error;
-    }
-  };
-
   const value = {
     balance,
     transactions,
     loading,
-    addFunds,
-    withdrawFunds,
+    updateBalance,
+    addFunds: walletService.addFunds,
+    withdrawFunds: walletService.withdrawFunds,
     refreshWallet: fetchBalance,
   };
 

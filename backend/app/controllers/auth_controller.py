@@ -1,5 +1,7 @@
+#auth_controller.py
+import logging
 from flask import request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from ..services.auth_service import AuthService
 from werkzeug.exceptions import BadRequest, Unauthorized
 
@@ -12,9 +14,9 @@ class AuthController:
                 username=data['username'],
                 email=data['email'],
                 password=data['password'],
-                first_name=data['first_name'],
-                last_name=data['last_name'],
-                phone_number=data['phone_number']
+                first_name=data.get('first_name'),
+                last_name=data.get('last_name'),
+                phone_number=data.get('phone_number')
             )
             return jsonify({"message": "User registered successfully", "user": user.to_dict()}), 201
         except BadRequest as e:
@@ -24,11 +26,17 @@ class AuthController:
     def login():
         data = request.get_json()
         try:
+            logging.info(f"Login attempt for user: {data.get('username')}")
             result = AuthService.login_user(data['username'], data['password'])
+            logging.info(f"Successful login for user: {data.get('username')}")
             return jsonify(result), 200
         except Unauthorized as e:
+            logging.warning(f"Failed login attempt for user: {data.get('username')} - {str(e)}")
             return jsonify({"error": str(e)}), 401
-
+        except Exception as e:
+            logging.error(f"Unexpected error during login: {str(e)}")
+            return jsonify({"error": "An unexpected error occurred"}), 500
+            
     @staticmethod
     @jwt_required(refresh=True)
     def refresh():
